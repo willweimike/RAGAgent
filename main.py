@@ -1,4 +1,5 @@
 import os
+import glob
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings, ChatOllama
@@ -9,16 +10,21 @@ from langgraph.graph import StateGraph, END
 
 
 print("Loading document...")
-pdf_path = "Getting_Started.pdf"
-
-if not os.path.exists(pdf_path):
-    print(f"Error: {pdf_path} not found. Please place a PDF in the directory.")
+# Load all PDF files in the current directory
+pdf_folder = "files"
+pdf_files = [f for f in glob.glob(os.path.join(pdf_folder, "*.pdf"))]
+if not pdf_files:
+    print("Error: No PDF files found in the directory. Please add PDFs.")
     quit()
 
-loader = PyPDFLoader(pdf_path)
-documents = loader.load()
+# Load each PDF and combine documents
+documents = []
+for pdf_path in pdf_files:
+    loader = PyPDFLoader(pdf_path)
+    docs = loader.load()
+    documents.extend(docs)
 
-# ---------------------------------------------------------
+
 # 2. Split the Text & Create Embeddings
 # ---------------------------------------------------------
 print("Splitting text and building vector database...")
@@ -30,7 +36,6 @@ vector_store = Chroma.from_documents(chunks, embeddings, persist_directory="./ch
 
 retriever = vector_store.as_retriever(search_kwargs={"k": 3})
 
-# ---------------------------------------------------------
 # 3. AGENTIC RAG SETUP
 # ---------------------------------------------------------
 @tool(description="Search for information inside the uploaded PDF document. Use this to answer questions about the document.")
@@ -41,7 +46,7 @@ def pdf_search(query: str) -> str:
 # Initialize the LLM (Ensure you are using a tool-calling capable model like llama3.2)
 llm = ChatOllama(model="qwen3:8b", temperature=0)
 
-# Create the agent using LangGraph (Replaces the deprecated AgentExecutor)
+# Create the agent using LangGraph
 agent = create_react_agent(
     model=llm,
     tools=[pdf_search],
@@ -65,7 +70,6 @@ app = graph.compile()
 
 
 if __name__ == "__main__":
-    # ---------------------------------------------------------
     # 4. EXECUTION
     # ---------------------------------------------------------
     while True:
