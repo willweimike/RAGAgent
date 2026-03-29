@@ -3,6 +3,14 @@
 
 This project implements an **Agentic Retrieval-Augmented Generation (RAG)** system using **LangGraph**, **LangChain**, and **Ollama**. Unlike standard RAG pipelines, this implementation uses a ReAct agent that can "decide" when to search the document to provide more accurate, context-aware answers.
 
+# Demo
+
+https://github.com/user-attachments/assets/23e7e8ae-d7ab-41a5-8ca2-4201c22d9422
+
+
+
+
+
 ## Features
 
 * **Local LLM Integration**: Uses `Ollama` for both embeddings (`nomic-embed-text`) and reasoning (`qwen3:8b`), ensuring data privacy.
