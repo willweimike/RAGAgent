@@ -5,7 +5,10 @@ This project implements an **Agentic Retrieval-Augmented Generation (RAG)** syst
 
 # Demo
 
-https://github.com/user-attachments/assets/c7863d24-0a76-4bc0-a974-f12056b335bc
+https://github.com/user-attachments/assets/ba6da54f-8433-4f71-bcce-b0668dd4439d
+
+
+
 
 ## Features
 
